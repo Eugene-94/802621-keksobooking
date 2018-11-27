@@ -241,6 +241,7 @@ function makePins(template) {
 /**
   *указывает в объявлении дополнительные опции
   @function
+  @param {object} template - используемый шаблон разметки
 */
 function fillFeaturesInfo(template) {
   for (var k = 0; k < offersList[0].offer.features.length; k++) {
@@ -258,8 +259,6 @@ map.classList.remove('map--faded');
 var mapPins = document.querySelector('.map__pins');
 
 var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
-
-
 
 makePins(pinTemplate);
 
@@ -305,5 +304,3 @@ cardItem.querySelector('.popup__avatar').src = offersList[0].author.avatar;
 
 var here = document.querySelector('.map__filters-container');
 here.insertAdjacentElement('beforebegin', cardItem);
-
-console.log(cardItem);
