@@ -1,28 +1,13 @@
 'use strict';
 
 var OBJECTS_QUANTITY = 8;
+var Types = {
+  PALACE: 'Дворец',
+  FLAT: 'Квартира',
+  HOUSE: 'Дом',
+  BUNGALO: 'Хижина'
+};
 var map = document.querySelector('.map');
-
-var titlesList = [
-  'Большая уютная квартира',
-  'Маленькая неуютная квартира',
-  'Огромный прекрасный дворец',
-  'Маленький ужасный дворец',
-  'Красивый гостевой домик',
-  'Некрасивый негостеприимный домик',
-  'Уютное бунгало далеко от моря',
-  'Неуютное бунгало по колено в воде'
-];
-
-var typesList = ['palace', 'flat', 'house', 'bungalo'];
-var checkinList = ['12:00', '13:00', '14:00'];
-var checkoutList = ['12:00', '13:00', '14:00'];
-var featuresList = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
-var photosList = [
-  'http://o0.github.io/assets/images/tokyo/hotel1.jpg',
-  'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
-  'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
-];
 
 /**
   *Возвращает целое случайное число в диапазоне [min max]
@@ -51,8 +36,19 @@ function getUrl(ordinal) {
   @param {array} sourceArray - исходный массив, содержащий все возможные варианты заголовков
   @return {string} - случайно выбранный элемент массива
 */
-function getTitle(sourceArray) {
-  return sourceArray[getRandom(0, sourceArray.length)];
+function getTitle() {
+  var titlesList = [
+    'Большая уютная квартира',
+    'Маленькая неуютная квартира',
+    'Огромный прекрасный дворец',
+    'Маленький ужасный дворец',
+    'Красивый гостевой домик',
+    'Некрасивый негостеприимный домик',
+    'Уютное бунгало далеко от моря',
+    'Неуютное бунгало по колено в воде'
+  ];
+
+  return titlesList[getRandom(0, titlesList.length - 1)];
 }
 
 /**
@@ -65,13 +61,13 @@ function getPrice() {
 }
 
 /**
-  *Выбирает случайный тип жилья из исходного массива sourceArray
+  *Выбирает случайный тип жилья из исходного объекта-перечисления
   @function
-  @param {array} sourceArray - исходный массив, содержащий все возможные варианты с типами жилья
-  @return {string} - случайно выбранный элемент массива
+  @param {object} enumObject - объект перечисление, содержащий типы жилья
+  @return {string} - случайно выбранный ключ объекта
 */
-function getType(sourceArray) {
-  return sourceArray[getRandom(0, sourceArray.length)];
+function getType(enumObject) {
+  return Object.keys(enumObject)[getRandom(0, 3)].toLowerCase();
 }
 
 /**
@@ -98,8 +94,13 @@ function getGuestsAmount() {
   @param {array} sourceArray - исходный массив, содержащий все возможные варианты времени регистрации
   @return {string} - случайно выбранный элемент массива
 */
-function getCheckin(sourceArray) {
-  return sourceArray[getRandom(0, sourceArray.length - 1)];
+function getCheckin() {
+  var checkinList = [
+    '12:00',
+    '13:00',
+    '14:00'
+  ];
+  return checkinList[getRandom(0, checkinList.length - 1)];
 }
 
 /**
@@ -108,8 +109,13 @@ function getCheckin(sourceArray) {
   @param {array} sourceArray - исходный массив, содержащий все возможные варианты времени выписки
   @return {string} - случайно выбранный элемент массива
 */
-function getCheckout(sourceArray) {
-  return sourceArray[getRandom(0, sourceArray.length - 1)];
+function getCheckout() {
+  var checkoutList = [
+    '12:00',
+    '13:00',
+    '14:00'
+  ];
+  return checkoutList[getRandom(0, checkoutList.length - 1)];
 }
 
 /**
@@ -118,11 +124,19 @@ function getCheckout(sourceArray) {
   @param {array} sourceArray - исходный массив, содержащий все возможные опции
   @return {array} featuresItems - массив, содеражщий случайное количество случайных опций
 */
-function getFeatures(sourceArray) {
-  var featuresAmount = getRandom(1, sourceArray.length);
+function getFeatures() {
+  var featuresList = [
+    'wifi',
+    'dishwasher',
+    'parking',
+    'washer',
+    'elevator',
+    'conditioner'
+  ];
+  var featuresAmount = getRandom(1, featuresList.length);
   var featuresItems = [];
   do {
-    featuresItems.push(sourceArray[getRandom(0, sourceArray.length - 1)]);
+    featuresItems.push(featuresList[getRandom(0, featuresList.length - 1)]);
   } while (featuresItems.length < featuresAmount);
 
   return featuresItems;
@@ -134,16 +148,22 @@ function getFeatures(sourceArray) {
   @param {array} sourceArray - исходный массив
   @return {array} sourceArray - перемешанный массив
 */
-function shufflePhotos(sourceArray) {
+function shufflePhotos() {
   var j;
   var temp;
-  for (var i = sourceArray.length - 1; i > 0; i--) {
+  var photosList = [
+    'http://o0.github.io/assets/images/tokyo/hotel1.jpg',
+    'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
+    'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
+  ];
+  for (var i = photosList.length - 1; i > 0; i--) {
     j = Math.floor(Math.random() * (i + 1));
-    temp = sourceArray[j];
-    sourceArray[j] = sourceArray[i];
-    sourceArray[i] = temp;
+    temp = photosList[j];
+    photosList[j] = photosList[i];
+    photosList[i] = temp;
   }
-  return sourceArray;
+
+  return photosList;
 }
 
 /**
@@ -186,17 +206,17 @@ function getObject(ordinal) {
     },
 
     offer: {
-      title: getTitle(titlesList),
+      title: getTitle(),
       address: getAddress(),
       price: getPrice(),
-      type: getType(typesList),
+      type: getType(Types),
       rooms: getRooms(),
       guests: getGuestsAmount(),
-      checkin: getCheckin(checkinList),
-      checkout: getCheckout(checkoutList),
-      features: getFeatures(featuresList),
+      checkin: getCheckin(),
+      checkout: getCheckout(),
+      features: getFeatures(),
       description: '',
-      photos: shufflePhotos(photosList)
+      photos: shufflePhotos()
     },
 
     location: {
@@ -252,6 +272,26 @@ function fillFeaturesInfo(template) {
   }
 }
 
+/**
+  *собирает строку с информацией о количестве комнат и гостей
+  @function
+  @param {number} ordinal - порядковый номер объекта, из которого берется информация
+  @return {string} - сформированная строка
+*/
+function getRoomsGuestsOffer(ordinal) {
+  return offersList[ordinal].offer.rooms + ' комнаты для ' + offersList[ordinal].offer.guests + ' гостей.';
+}
+
+/**
+  *собирает строку с информацией о времени въезда и выезда
+  @function
+  @param {number} ordinal - порядковый номер объекта, из которого берется информация
+  @return {string} - сформированная строка
+*/
+function getCheckinCheckoutOffer(ordinal) {
+  return 'Заезд после ' + offersList[ordinal].offer.checkin + ', выезд до ' + offersList[ordinal].offer.checkout;
+}
+
 var offersList = getObjectsArray(OBJECTS_QUANTITY);
 
 map.classList.remove('map--faded');
@@ -267,22 +307,9 @@ var cardItem = mapCardTempalte.cloneNode(true);
 cardItem.querySelector('.popup__title').textContent = offersList[0].offer.title;
 cardItem.querySelector('.popup__text--address').textContent = offersList[0].offer.address;
 cardItem.querySelector('.popup__text--price').textContent = offersList[0].offer.price + '₽/ночь';
-switch (offersList[0].offer.type) {
-  case 'flat':
-    cardItem.querySelector('.popup__type').textContent = 'Квартира';
-    break;
-  case 'bungalo':
-    cardItem.querySelector('.popup__type').textContent = 'Бунгало';
-    break;
-  case 'house':
-    cardItem.querySelector('.popup__type').textContent = 'Дом';
-    break;
-  case 'palace':
-    cardItem.querySelector('.popup__type').textContent = 'Дворец';
-    break;
-}
-cardItem.querySelector('.popup__text--capacity').textContent = offersList[0].offer.rooms + ' комнаты для ' + offersList[0].offer.guests + ' гостей.';
-cardItem.querySelector('.popup__text--time').textContent = 'Заезд после ' + offersList[0].offer.checkin + ', выезд до ' + offersList[0].offer.checkout;
+cardItem.querySelector('.popup__type').textContent = Types[offersList[0].offer.type.toUpperCase()];
+cardItem.querySelector('.popup__text--capacity').textContent = getRoomsGuestsOffer(0);
+cardItem.querySelector('.popup__text--time').textContent = getCheckinCheckoutOffer(0);
 
 var featureTemplate = document.querySelector('#feature-template').content.querySelector('.popup__feature');
 
